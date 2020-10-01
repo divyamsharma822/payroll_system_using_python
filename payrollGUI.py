@@ -22,20 +22,37 @@ class Application(Frame):
     def set_female(self):
         self.new_gender.set('female')
 
-    def add_data(self):
-        name = self.add_name_entry.get()
-        eid = int(self.add_eid_entry.get())
-        gender = self.new_gender.get() 
-        salary = int(self.add_salary_entry.get())
-        new_row = [eid,name,gender,salary]
-        print(eid,name,gender,salary)
-        add_row(new_row)
+    def add_data(self,event=None):
+
+        #To not throw an error in console if one or two inputs are empty
+        try:
+            name = self.add_name_entry.get()
+            eid = int(self.add_eid_entry.get())
+            gender = self.new_gender.get() 
+            salary = int(self.add_salary_entry.get())
+            new_row = [eid,name,gender,salary]
+            print(eid,name,gender,salary)
+            add_row(new_row)
+
+            
+        except ValueError:
+            #To check if all inputs are being given
+            if(not self.add_name_entry.get()):
+                mb.showwarning(title='Invalid Input',message='Please Enter all values to proceed.')
+            elif(not self.new_gender.get()):
+                mb.showwarning(title='Invalid Input',message='Please Enter all values to proceed.')
+            elif(not self.add_eid_entry.get()):
+                mb.showwarning(title='Invalid Input',message='Please Enter all values to proceed.')
+            elif(not self.add_salary_entry.get()):
+                mb.showwarning(title='Invalid Input',message='Please Enter all values to proceed.')
+
+
         self.add_eid_entry.delete(0,'end')
         self.add_name_entry.delete(0,'end')
         self.add_salary_entry.delete(0,'end')
         self.add_eid_entry.delete(0,'end')
 
-    def searchEmp(self):
+    def searchEmp(self,event=None):
         try:
             self.eid = int(self.eid_entry.get())
             self.name = self.name_entry.get()
@@ -95,7 +112,7 @@ class Application(Frame):
 
                 
 
-    def addEmp(self):
+    def addEmp(self,event=None):
         root=Tk()
         root.title('Add New Employee')
         root.iconbitmap('payroll.ico')
@@ -144,6 +161,10 @@ class Application(Frame):
         #ADD new button
         self.add_new_button = Button(root,text='Add to Database',command=self.add_data)
         self.add_new_button.grid(row=5,column=0,pady=(0,10),padx=10,columnspan=3,ipadx=5)
+
+        # Enter key functionality on Add to database button
+        self.add_new_button.bind('<Return>',self.add_data)
+        
         
         
     def createWidgets(self):
@@ -174,6 +195,10 @@ class Application(Frame):
         #Add new Employee Button
         self.add_button = Button(self.master,text='Add New Employee',command=self.addEmp)
         self.add_button.grid(row=3,column=0,pady=(0,10),padx=10,columnspan=2,ipadx=5)
+
+        # Enter key functionality for buttons
+        self.search_button.bind("<Return>", self.searchEmp)
+        self.add_button.bind("<Return>",self.addEmp)
 
 
 root =Tk()
